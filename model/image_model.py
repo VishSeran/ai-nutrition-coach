@@ -1,6 +1,6 @@
 from typing import Optional
 from PIL import Image
-from configuration.config import IMAGE_MODEL
+from configuration.config import IMAGE_MODEL,system_prompt
 from transformers import AutoImageProcessor, AutoModelForImageTextToText
 import torch
 from configuration.logger import get_logger
@@ -49,9 +49,11 @@ class ImageModel:
                 response = requests.get(image_url)
                 response.raise_for_status()
                 image = Image.open(io.BytesIO(response.content)).convert("RGB")
+                logger.info("image got from url")
             
             elif image_path:
                 image = Image.open(image_path).convert("RGB")
+                logger.info("image got from local path")
             
             else:
                 raise ValueError("At least image path or url needed")
@@ -75,25 +77,39 @@ class ImageModel:
         
         try:
             
+            if not image:
+                raise ValueError("Image cannot be empty or none")
+            
             message = [
                 {
                     "role": "user",
                     "content": [
                         {
                             "type" : "text",
-                            "text": 
+                            "text": system_prompt
+                        },
+                        {
+                            "type": "image",
+                            "url": image
                         }
                     ]
                 }
             ]
-            response = self.processor.apply_chat_format(
-                
+            logger.info("message has crafted")
+            
+            inputs = self.processor.apply_chat_template(
+                message,
+                add_generation_prompt = True,
+                tokenize = True,
+                return_dict = True,
+                return_tensors = "pt"
             )
+            logger.info("model input has crafted")
         except ValueError as e:
             logger.error(f"Value error: {e}")
             raise
     
         except Exception as e:
-            logger.error(f"Error in image encoding: {e}")
+            logger.error(f"Error in get response: {e}")
             raise
         
