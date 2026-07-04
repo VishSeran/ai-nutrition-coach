@@ -1,7 +1,7 @@
 from typing import Optional
 from PIL import Image
 from configuration.config import IMAGE_MODEL,system_prompt
-from transformers import AutoImageProcessor, AutoModelForImageTextToText
+from transformers import AutoProcessor, AutoModelForImageTextToText
 import torch
 from configuration.logger import get_logger
 import requests
@@ -24,7 +24,7 @@ class ImageModel:
             ).to(self.device)
             logger.info(f"{model_name} has loaded")
             
-            self.processor = AutoImageProcessor.from_pretrained(
+            self.processor = AutoProcessor.from_pretrained(
                 model_name
             )
             self.processor.tokenizer.pad_token_id = None
@@ -90,7 +90,7 @@ class ImageModel:
                         },
                         {
                             "type": "image",
-                            "url": image
+                            "image": image
                         }
                     ]
                 }
@@ -104,7 +104,30 @@ class ImageModel:
                 return_dict = True,
                 return_tensors = "pt"
             )
+            
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
             logger.info("model input has crafted")
+            
+            generated_ids = self.model.generate(
+                **inputs,
+                do_sample = False,
+                max_new_tokens = 256
+            )
+            
+            if generated_ids is None:
+                logger.info("Response fetch failed")
+                
+            generated_ids = generated_ids[:,inputs["input_ids"].shape[1]:]
+            
+            response = self.processor.batch_decode(
+                generated_ids,
+                skip_special_tokens=True
+            )
+            
+            logger.info("response has fetched")
+            return response
+            
         except ValueError as e:
             logger.error(f"Value error: {e}")
             raise
