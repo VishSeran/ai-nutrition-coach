@@ -27,6 +27,7 @@ class ImageModel:
             self.processor = AutoImageProcessor.from_pretrained(
                 model_name
             )
+            self.processor.tokenizer.pad_token_id = None
             logger.info(f"{model_name} processor has loaded")
 
         except ValueError as e:
@@ -37,7 +38,7 @@ class ImageModel:
             logger.error(f"Error in Image Model initialization: {e}")
             raise
         
-    def image_input(self, 
+    def get_image(self, 
                     image_path:Optional[str], image_url:Optional[str]):
         
         image = None
@@ -68,5 +69,31 @@ class ImageModel:
     
         except Exception as e:
             logger.error(f"Error in image input: {e}")
+            raise
+        
+    def get_response_from_model(self, image):
+        
+        try:
+            
+            message = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type" : "text",
+                            "text": 
+                        }
+                    ]
+                }
+            ]
+            response = self.processor.apply_chat_format(
+                
+            )
+        except ValueError as e:
+            logger.error(f"Value error: {e}")
+            raise
+    
+        except Exception as e:
+            logger.error(f"Error in image encoding: {e}")
             raise
         
