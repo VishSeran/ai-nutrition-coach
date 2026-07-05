@@ -6,3 +6,4 @@ class DocumentLoader:
     def __init__(self, dataset_name=DATASET_PATH):
         
         self.df = pd.read_csv(dataset_name)
+        

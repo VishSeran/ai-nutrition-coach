@@ -1,6 +1,6 @@
 from typing import Optional
 from PIL import Image
-from configuration.config import IMAGE_MODEL,system_prompt
+from configuration.config import IMAGE_MODEL,SYSTEM_PROMPT
 from transformers import AutoProcessor, AutoModelForImageTextToText
 import torch
 from configuration.logger import get_logger
@@ -86,7 +86,7 @@ class ImageModel:
                     "content": [
                         {
                             "type" : "text",
-                            "text": system_prompt
+                            "text": SYSTEM_PROMPT
                         },
                         {
                             "type": "image",
