@@ -2,6 +2,7 @@ import faiss
 from sentence_transformers import SentenceTransformer
 from configuration.config import EMBEDDING_MODEL
 from configuration.logger import get_logger
+from langc
 
 logger = get_logger("faiss-process")
 
