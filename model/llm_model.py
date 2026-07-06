@@ -92,6 +92,7 @@ class LLMModel:
             
             logger.info("Response is retrieved")
             return response
+        
             
         except ValueError as e:
             logger.error(f"Value error: {e}")
