@@ -6,7 +6,7 @@ An AI-powered Nutrition Coach web application that estimates calories and provid
 
 This project is a Flask-based web application that leverages generative AI and computer vision to analyze food images, identify food items, estimate caloric content, and provide personalized nutritional guidance.
 
-Instead of IBM Watsonx AI, this implementation uses **Hugging Face Transformers** with vision-language models (e.g., LLaVA / Llama-family VLMs / CLIP-based pipelines) to perform food recognition and description tasks.
+This implementation uses **Hugging Face Transformers** with vision-language models (e.g., LLaVA / Llama-family VLMs / CLIP-based pipelines) to perform food recognition and description tasks.
 
 The recognized food items are mapped against a nutritional database to estimate calories and macronutrients.
 
