@@ -15,7 +15,7 @@ class LLMModel:
                 raise ValueError("LLM model is empty or none")
             
             device = 0 if torch.cuda.is_available() else -1
-            llm = HuggingFacePipeline.from_model_id(
+            pipeline = HuggingFacePipeline.from_model_id(
                 model_id=llm_model,
                 task="text-generation",
                 device= device,
@@ -26,7 +26,7 @@ class LLMModel:
             )
             
             logger.info("llm is created")
-            self.chat_llm = ChatHuggingFace(llm=llm)
+            self.chat_llm = ChatHuggingFace(llm=pipeline)
             logger.info("chat llm is created")
             
         except ValueError as e:
@@ -37,4 +37,18 @@ class LLMModel:
             logger.error(f"Error in LLM initialization: {e}")
             raise
     
+    
+    def get_response_from_llm(self, query):
+        
+        try:
+            if not query:
+                raise ValueError("Query cannot be empty or none")
+            
+        except ValueError as e:
+            logger.error(f"Value error: {e}")
+            raise
+    
+        except Exception as e:
+            logger.error(f"Error in get response from llm: {e}")
+            raise
     
