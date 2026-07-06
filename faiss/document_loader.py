@@ -12,6 +12,7 @@ class DocumentLoader:
             if not dataset_name:
                 raise ValueError("dataset name is empty or none")
             self.df = pd.read_csv(dataset_name)
+            logger.info("Dataset has imported successfull")
             self.documents = []
             
         except ValueError as e:
