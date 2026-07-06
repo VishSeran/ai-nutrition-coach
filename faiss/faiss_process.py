@@ -86,7 +86,7 @@ class FaissSearch:
                     "score": float(distance[0][i])
                 }
                 
-                for i, idx in self.documents
+                for i, idx in enumerate(indices[0])
             ]
             
         except ValueError as e:
