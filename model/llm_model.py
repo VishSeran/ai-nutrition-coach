@@ -14,13 +14,21 @@ class LLMModel:
             if not llm_model:
                 raise ValueError("LLM model is empty or none")
             
-            device = 0 if
-            pipeline = HuggingFacePipeline.from_model_id(
+            device = 0 if torch.cuda.is_available() else -1
+            llm = HuggingFacePipeline.from_model_id(
                 model_id=llm_model,
                 task="text-generation",
-                device= 0
+                device= device,
+                model_kwargs={
+                    "temperature": 0.6,
+                    "max_new_tokens": 256
+                }
             )
-        
+            
+            logger.info("llm is created")
+            self.chat_llm = ChatHuggingFace(llm=llm)
+            logger.info("chat llm is created")
+            
         except ValueError as e:
             logger.error(f"Value error: {e}")
             raise
