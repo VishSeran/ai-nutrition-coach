@@ -1,5 +1,4 @@
-import faiss
-from sentence_transformers import SentenceTransformer
+import faiss 
 from configuration.config import EMBEDDING_MODEL
 from configuration.logger import get_logger
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
