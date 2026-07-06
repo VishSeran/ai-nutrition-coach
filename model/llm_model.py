@@ -6,8 +6,6 @@ from configuration.logger import get_logger
 import torch
 
 logger = get_logger("LLM-model")
-
-
 class LLMModel:
     def __init__(self, llm_model=LLM_MODEL):
 
@@ -28,6 +26,8 @@ class LLMModel:
             logger.info("llm is created")
             self.chat_llm = ChatHuggingFace(llm=pipeline)
             logger.info("chat llm is created")
+            
+            self.build_llm_chain()
 
         except ValueError as e:
             logger.error(f"Value error: {e}")
@@ -82,9 +82,17 @@ class LLMModel:
             if not query:
                 raise ValueError("Query cannot be empty or none")
 
-            template = """
-            """
-
+            logger.info(f"Generating response for query length: {len(query)}")
+            response = self.chain_llm.invoke({
+                "content": query
+            })
+            
+            if response is None or response.strip() == "":
+                raise ValueError("Empty LLM response")
+            
+            logger.info("Response is retrieved")
+            return response
+            
         except ValueError as e:
             logger.error(f"Value error: {e}")
             raise
